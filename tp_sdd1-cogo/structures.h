@@ -16,7 +16,7 @@ typedef struct agenda
     struct agenda     * suivant;
 } agenda_t ;
 
-int inserer_agenda(agenda_t * ag , agenda_t ** pag, action_t ** pac);
+int inserer_agenda(agenda_t * ag , agenda_t ** pag);
 int inserer_action(action_t * ac , action_t ** pac);
 int inserer(char date[6],char moment[3], char nom[10], agenda_t ** pag);
 int supprimer_agenda(char date[6], agenda_t ** pag);

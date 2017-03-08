@@ -3,16 +3,15 @@
 #include <string.h>
 #include "structures.h"
 
-/*Revoir Insertions */
 
-int inserer_agenda(agenda_t * ag , agenda_t ** pag, action_t ** pac)
+int inserer_agenda(agenda_t * ag , agenda_t ** pag)
 {
+    printf("coucou \n");
     int cd = 0;
     if ((*pag) == NULL) /*liste vide*/
     {
         (*pag) = ag;
         (*pag)->suivant = NULL;
-        pac = ag->actions;
         cd = 1;
     }
     else
@@ -25,7 +24,6 @@ int inserer_agenda(agenda_t * ag , agenda_t ** pag, action_t ** pac)
         {
             prec->suivant = ag;
             cd = 1;
-            pac = ag->actions;
         }
         else
         {
@@ -37,9 +35,8 @@ int inserer_agenda(agenda_t * ag , agenda_t ** pag, action_t ** pac)
             }
             else /* element deja present*/
             {
-                cd = -1;
+                cd =inserer_action((*ag->actions),prec->suivant->actions);
             }
-            pac = prec->suivant->actions;
         }
 
 
@@ -88,21 +85,13 @@ int inserer_action(action_t * ac , action_t ** pac)
 
 int inserer(char date[6],char moment[3], char nom[10], agenda_t ** pag)
 {
-    int cd = 0;
     agenda_t * ag = (agenda_t *) malloc(sizeof(agenda_t));
     action_t * ac = (action_t *) malloc(sizeof(action_t));
     strcpy(ag->date, date);
     strcpy(ac->moment, moment);
     strcpy(ac->nom, nom);
-    action_t ** pac = &ac;
-    if (inserer_agenda(ag,pag,pac))
-    {
-        if (inserer_action(ac,pac))
-        {
-            cd = 1;
-        }
-    }
-    return cd;
+    ag->actions = &ac;
+    return (inserer_agenda(ag,pag));
 }
 
 int supprimer_agenda(char date[6], agenda_t ** pag)

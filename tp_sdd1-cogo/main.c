@@ -8,10 +8,10 @@
 
 int main()
 {
-    printf("salut");
     agenda_t ** pag = creation("test.txt");
-    /*printf("%s %s %s \n", (*pag)->date, (*(*pag)->actions)->moment, (*(*pag)->actions)->nom);
-    printf("%s %s %s \n", (*pag)->suivant->date, (*(*pag)->suivant->actions)->moment, (*(*pag)->suivant->actions)->nom);*/
+    sauvegarde("test2.txt",pag);
+    printf("%s %s %s \n",(*pag)->date,(*(*pag)->actions)->moment,(*(*pag)->actions)->nom);
+    /*printf("%s %s %s \n", (*pag)->suivant->date, (*(*pag)->suivant->actions)->moment, (*(*pag)->suivant->actions)->nom);*/
      return 0;
 
 }
