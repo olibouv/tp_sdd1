@@ -3,8 +3,9 @@
 #include "structures.h"
 #include "fonctions.h"
 #include <string.h>
+#define TMAX 100
 
-agenda_t ** creation(char nomfichier[])
+agenda_t ** creation(char nomfichier[])/*ne fonctionne pas*/
 {
     int cd;
     char date[6];
@@ -35,7 +36,7 @@ agenda_t ** creation(char nomfichier[])
     return pag;
 }
 
-void sauvegarde (char nom[], agenda_t ** pag)
+void sauvegarde (char nom[], agenda_t ** pag)/* fonctionne*/
 {
     FILE * fichier;
     agenda_t ** courAgenda =(agenda_t **) malloc(sizeof(agenda_t *));
@@ -46,7 +47,7 @@ void sauvegarde (char nom[], agenda_t ** pag)
         fichier = fopen(nom,"w");
         *courAgenda = (*pag);
         printf("yo!\n");
-        while((*courAgenda) != NULL)/*Pas d'entrée dans la boucle*/
+        while((*courAgenda) != NULL)
         {
             printf("test1\n");
             *courAction = *((*courAgenda)->actions);
@@ -56,11 +57,88 @@ void sauvegarde (char nom[], agenda_t ** pag)
                 fputs((*courAgenda)->date,fichier);
                 fputs((*courAction)->moment,fichier);
                 fputs((*courAction)->nom,fichier);
+                fputs("\n",fichier);
                 *courAction = (*courAction)->suivant;
             }
-            fputs("\n",fichier);
             *courAgenda = (*courAgenda)->suivant;
         }
     }
 }
 
+int supprime(char date[6],char moment[3], agenda_t ** pag) /*Ne fonctionne pas*/
+{
+    int code = 0;
+    agenda_t * cour = (* pag);
+    while ((cour != NULL) && (strcmp(cour->date,date)<0))
+    {
+        printf("coucou1 \n");
+        cour = cour->suivant;
+    }
+    if (!strcmp(cour->date,date))
+    {
+        printf("coucou2 \n");
+        code = supprimer_action(moment, cour->actions);
+    }
+    return code;
+}
+
+int trouvemotif(char motif[], char nom[10]) /*fonctionne*/
+{
+    int i,j;
+    int bool =0;
+    int n = strlen(motif);
+    if (n <= 10)
+    {
+        i = 0;
+        j = 0;
+       while(i<10 && j<n)
+       {
+           if(motif[j]==nom[i])
+           {
+               j ++;
+           }
+           i++;
+       }
+        if(j == n)
+        {
+            bool =1;
+        }
+
+    }
+    return bool;
+}
+
+char *** liste_action(char motif[], agenda_t ** pag) /* fonctionne*/
+{
+    char jour[9];
+    int i;
+    char * courListe;
+    char *** tete = (char ***)malloc(2 * sizeof(char **));
+    char ** deb = (char **) malloc(TMAX * sizeof(char[10]));
+    char ** fin = deb;
+    *deb = (char *) malloc(sizeof(char[10]));
+    courListe = *deb;
+    action_t * courAction;
+    agenda_t * courAgenda = (*pag);
+    while(courAgenda != NULL)
+    {
+        courAction = *(courAgenda ->actions);
+        while(courAction != NULL && !trouvemotif(motif,courAction->nom))
+        {
+            courAction = courAction->suivant;
+        }
+        if (courAction != NULL)
+        {
+
+            strncpy(jour,courAgenda->date,6);
+            strncpy(jour +6 ,courAction->moment,3);
+            strcpy(courListe,jour);
+            courListe += sizeof(char[10]);
+            fin = &courListe;
+        }
+        courAgenda = courAgenda->suivant;
+    }
+    tete[0] = deb;
+    tete[1] = fin;
+    return(tete);
+}
