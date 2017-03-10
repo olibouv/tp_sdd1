@@ -17,6 +17,7 @@
 
 #include "structures.h"
 
+int inserer(char date[6], char moment[3], char nom[10], agenda_t ** pag);
 agenda_t ** creation(char nomfichier[]);
 
 void sauvegarde (char nom[], agenda_t ** pag);
