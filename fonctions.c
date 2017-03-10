@@ -53,7 +53,7 @@ int inserer(char date[6],char moment[3], char nom[10], agenda_t ** pag)
 
 
 
-/*
+/* NE FONCTIONNE PAS
  _______________________________________________________________________________________
 |					creation
 |
@@ -85,6 +85,8 @@ agenda_t ** creation(char nomfichier[])
         }
     }
     fclose(fichier);				/*on ferme le fichier*/
+	
+/* suite au fclose les noms des actions changent, et les actions ne s'insèrent pas dans l'agenda. */
     return pag;
 }
 
