@@ -21,6 +21,50 @@
 #include <string.h>
 #define TMAX 100
 
+
+/*
+ _______________________________________________________________________________________
+|					inserer
+|
+|	Cette fonction insère une action dans un agenda à l'aide de sa date, son moment,
+|	son nom et de l'adresse du pointeur d'agenda dans lequel insérer.
+|
+|	entrées : 	- date (année + semaine): date de l'action à insérer
+|			- moment (jour + heure) : moment de l'action à insérer
+|			- nom : nom de l'action à insérer
+|			- pag : adresse du pointeur d'agenda dans lequel insérer
+|
+|	sortie :	- inserer_agenda : fait appel à la procédure inserer_agenda, qui
+|					prend en paramètre le bloc semaine qui vient d'être
+|					alloué et retourne un code d'erreur.
+|
+*/
+
+int inserer(char date[6],char moment[3], char nom[10], agenda_t ** pag)
+{
+    agenda_t * ag = (agenda_t *) malloc(sizeof(agenda_t));	/* on alloue l'espace pour le bloc semaine */
+    action_t * ac = (action_t *) malloc(sizeof(action_t));	/* on alloue l'espace pour le bloc action */
+    strcpy(ag->date, date);					/* on met la date dans le bloc semaine */
+    strcpy(ac->moment, moment);					/* on met le moment dans le bloc action */
+    strcpy(ac->nom, nom);					/* on met le nom dans le bloc action */
+    ag->actions = &ac;						/* on fait pointer le pointeur d'actions sur le bloc action */
+    return (inserer_agenda(ag,pag));				/* on insère dans l'agenda le bloc semaine par son adresse */
+}
+
+
+
+/*
+ _______________________________________________________________________________________
+|					creation
+|
+|	Cette fonction créé un agenda à partir d'un fichier texte.
+|
+|	entrée : 	- nomfichier : nom du fichier texte
+|
+|	sortie :	- pag : adresse du pointeur d'agenda créé
+|
+*/
+
 agenda_t ** creation(char nomfichier[])/*ne fonctionne pas*/
 {
     char date[6];
@@ -59,7 +103,7 @@ agenda_t ** creation(char nomfichier[])/*ne fonctionne pas*/
 |   Cette fonction sauvegarde l'agenda dans un fichier texte
 |
 |	entrées : 	- nom : nom du fichier de sauvegarde
-|               - pag : adresse du pointeur d'agenda
+|              	 	- pag : adresse du pointeur d'agenda
 |
 |	sortie :	x
 |
@@ -100,13 +144,13 @@ void sauvegarde (char nom[], agenda_t ** pag)
 |   Cette fonction supprime une action de l'agenda à l'aide sa date et moment
 |
 |	entrées : 	- date : date de l'action à supprimer
-|				- moment : moment de l'action à supprimer
-|               - pag : adresse du pointeur d'agenda
+|			- moment : moment de l'action à supprimer
+|               	- pag : adresse du pointeur d'agenda
 |
 |	sortie :	- code : entier, code d'erreur issu des 2 fonctions supprimer_action et
 |                       supprimer_agenda
-|							1 si l'action a été supprimée
-|							0 sinon
+|					1 si l'action a été supprimée
+|					0 sinon
 |
 |
 */
@@ -140,11 +184,11 @@ int supprime(char date[6],char moment[3], agenda_t ** pag)
 |   Cette fonction retourne un booléen qui indique si le motif est dans le nom de l'action.
 |
 |	entrées : 	- motif : motif recherché
-|				- nom : nom de l'action dans laquelle on recherche le motif
+|			- nom : nom de l'action dans laquelle on recherche le motif
 |
 |	sortie :	- bool : entier, booléen 
-|							1 si le motif est dans le nom
-|							0 sinon
+|					1 si le motif est dans le nom
+|					0 sinon
 |
 |
 */
@@ -186,14 +230,14 @@ int trouve_motif(char motif[], char nom[10])
  _______________________________________________________________________________________
 |							liste_action
 |
-|   Cette fonction
+|   Cette fonction retourne l'adresse de la liste dans laquelle
 |
 |	entrées : 	- motif : motif recherché
-|				- pag : adresse du pointeur d'agenda
+|			- pag : adresse du pointeur d'agenda
 |
 |	sortie :	- tete : adresse? pointeur? de la tete
-|							1 si le motif est dans le nom
-|							0 sinon
+|						1 si le motif est dans le nom
+|						0 sinon
 |
 |
 */
