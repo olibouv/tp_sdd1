@@ -23,11 +23,11 @@
 |							inserer_agenda
 |
 |	entrées : 	- ag : adresse du bloc semaine à insérer
-|				- pag : adresse du pointeur d'agenda dans lequel insérer
+|			- pag : adresse du pointeur d'agenda dans lequel insérer
 |
 |	sortie :	- code : entier, code d'erreur 
-|							1 si l'insertion s'est bien passée
-|							0 sinon
+|					1 si l'insertion s'est bien passée
+|					0 sinon
 */
 
 int inserer_agenda(agenda_t * ag, agenda_t ** pag)
@@ -76,12 +76,12 @@ int inserer_agenda(agenda_t * ag, agenda_t ** pag)
 |							inserer_action
 |
 |	entrées : 	- ac : adresse du bloc action à insérer
-|				- pac : adresse du pointeur d'actions dans lequel insérer
+|			- pac : adresse du pointeur d'actions dans lequel insérer
 |
 |	sortie :	- code : entier, code d'erreur 
-|							1 si l'insertion s'est bien passée
-|							-1 si le moment était déjà occupé (on ne fait rien)
-|							0 sinon
+|					1 si l'insertion s'est bien passée
+|					-1 si le moment était déjà occupé (on ne fait rien)
+|					0 sinon
 */
 
 int inserer_action(action_t * ac, action_t ** pac)
@@ -153,11 +153,11 @@ int inserer(char date[6], char moment[3], char nom[10], agenda_t ** pag)
 |							supprimer_agenda
 |
 |	entrées : 	- date (année + semaine): date de la semaine à supprimer
-|				- pag : adresse du pointeur d'agenda dans lequel supprimer
+|			- pag : adresse du pointeur d'agenda dans lequel supprimer
 |
 |	sortie :	- code : entier, code d'erreur
-|							1 si la suppression s'est bien passée
-|							0 sinon
+|					1 si la suppression s'est bien passée
+|					0 sinon
 */
 
 int supprimer_agenda(char date[6], agenda_t ** pag)
@@ -193,11 +193,11 @@ int supprimer_agenda(char date[6], agenda_t ** pag)
 |							supprimer_action
 |
 |	entrées : 	- moment (jour + heure): moment de l'action à supprimer
-|				- pac : adresse du pointeur d'actions dans lequel supprimer
+|			- pac : adresse du pointeur d'actions dans lequel supprimer
 |
 |	sortie :	- code : entier, code d'erreur
-|							1 si la suppression s'est bien passée
-|							0 sinon
+|					1 si la suppression s'est bien passée
+|					0 sinon
 */
 
 int supprimer_action(char moment[3], action_t ** pac)
