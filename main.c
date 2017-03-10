@@ -8,7 +8,11 @@
 
 
 int main()                                                                                      
-{                                                                                               
+{   
+    printf("test sauvegarde agenda vide : pas de testvide.txt \n");
+    agenda_t * vide = NULL;                                        
+    agenda_t ** pvide = &vide;                                     
+    sauvegarde("testvide.txt",pvide);                              
     printf("test creation : résultat testcreation.txt \n");                                     
     agenda_t ** pag = creation("test.txt");                                                     
     sauvegarde("testcreation.txt",pag);                                                         
