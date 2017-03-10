@@ -6,7 +6,6 @@
 
 int inserer_agenda(agenda_t * ag , agenda_t ** pag)
 {
-    printf("coucou \n");
     int cd = 0;
     if ((*pag) == NULL) /*liste vide*/
     {
@@ -22,6 +21,7 @@ int inserer_agenda(agenda_t * ag , agenda_t ** pag)
         }
         if (prec->suivant == NULL) /* fin de liste*/
         {
+            ag->suivant = NULL;
             prec->suivant = ag;
             cd = 1;
         }
@@ -47,7 +47,7 @@ int inserer_agenda(agenda_t * ag , agenda_t ** pag)
 int inserer_action(action_t * ac , action_t ** pac)
 {
     int cd = 0;
-    if((*pac) == NULL)
+    if((*pac) == NULL)/*liste vide*/
     {
         (*pac) = ac;
         (*pac)->suivant = NULL;
@@ -62,8 +62,8 @@ int inserer_action(action_t * ac , action_t ** pac)
         }
         if (prec->suivant == NULL) /*insertion fin*/
         {
-            prec->suivant = ac;
             ac->suivant =NULL;
+            prec->suivant = ac;
             cd = 1;
         }
         else
@@ -100,22 +100,33 @@ int supprimer_agenda(char date[6], agenda_t ** pag)
     agenda_t * prec = (* pag);
     agenda_t * tmp = NULL;
     action_t * tmp2 = NULL;
-    while ((prec->suivant != NULL) && (strcmp(prec->suivant->date,date)<0))
+    if(!strcmp(prec->date,date))/*si le premier element est a supprimer*/
     {
-        prec = prec->suivant;
-    }
-    if (!strcmp(prec->suivant->date, date))
-    {
-        tmp = prec->suivant;
-        prec->suivant = prec->suivant->suivant;
-        while (tmp->actions != NULL)
+        *pag = prec->suivant;
+        while (*prec->actions != NULL)
         {
-            tmp2 = (*tmp->actions);
-            (*tmp->actions) = tmp2->suivant;
+            tmp2 = (*prec->actions);
+            (*prec->actions) = tmp2->suivant;
             free(tmp2);
         }
-        free(tmp);
+        free(prec);
         code = 1;
+    }
+    else {
+        while ((prec->suivant != NULL) && (strcmp(prec->suivant->date, date) < 0)) {
+            prec = prec->suivant;
+        }
+        if (!strcmp(prec->suivant->date, date)) {
+            tmp = prec->suivant;
+            prec->suivant = prec->suivant->suivant;
+            while (*tmp->actions != NULL) {
+                tmp2 = (*tmp->actions);
+                (*tmp->actions) = tmp2->suivant;
+                free(tmp2);
+            }
+            free(tmp);
+            code = 1;
+        }
     }
     return code;
 }
@@ -125,16 +136,24 @@ int supprimer_action(char moment[3], action_t ** pac)
     int code = 0;
     action_t * prec = (* pac);
     action_t * tmp = NULL;
-    while ((prec->suivant != NULL) && (strcmp(prec->suivant->moment, moment)<0))
+    if (!strcmp(prec->moment ,moment)) /*si le premier element est a supprimer*/
     {
-        prec = prec->suivant;
-    }
-    if(!strcmp(prec->suivant->moment, moment))
-    {
-        tmp = prec->suivant;
-        prec->suivant = prec->suivant->suivant;
-        free(tmp);
+        *pac = prec->suivant;
+        free(prec);
         code = 1;
+    }
+    else {
+        while ((prec->suivant != NULL) && (strcmp(prec->suivant->moment, moment) < 0)) {
+            printf("test1 \n");
+            prec = prec->suivant;
+        }
+        if (!strcmp(prec->suivant->moment, moment)) {
+            printf("test2 \n");
+            tmp = prec->suivant;
+            prec->suivant = prec->suivant->suivant;
+            free(tmp);
+            code = 1;
+        }
     }
     return code;
 }

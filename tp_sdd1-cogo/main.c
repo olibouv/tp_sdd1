@@ -31,7 +31,7 @@ int main()
     ac1->suivant = ac2;
     ag->suivant = ag1;
     agenda_t **pag2 = &ag;
-    /*int cd = supprime("654321", "24", pag2);
+    int cd = supprime("123456", "42", pag2);
     if (cd)
     {
         printf("suppresssion réussie \n");
@@ -40,10 +40,10 @@ int main()
     {
         printf("suppression ratée \n");
     }
-    sauvegarde("test2.txt", pag2);*/
+    sauvegarde("test2.txt", pag2);
     /*printf("%s %s %s \n",(*pag)->date,(*(*pag)->actions)->moment,(*(*pag)->actions)->nom);
     printf("%s %s %s \n", (*pag)->suivant->date, (*(*pag)->suivant->actions)->moment, (*(*pag)->suivant->actions)->nom);*/
-    char *** tete = liste_action("yo",pag2);
-    printf(" %s \n %s \n", *tete[0], *(tete[0])+sizeof(char[10]));
+   /* char *** tete = liste_action("yo",pag2);
+    printf(" %s \n %s \n", *tete[0], *(tete[0])+sizeof(char[10]));*/
     return 0;
 }

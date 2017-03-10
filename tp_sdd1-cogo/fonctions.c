@@ -7,7 +7,6 @@
 
 agenda_t ** creation(char nomfichier[])/*ne fonctionne pas*/
 {
-    int cd;
     char date[6];
     char moment[3];
     char nom[10];
@@ -43,17 +42,13 @@ void sauvegarde (char nom[], agenda_t ** pag)/* fonctionne*/
     action_t ** courAction = (action_t **) malloc(sizeof(action_t *));
     if ((*pag) != NULL )
     {
-        printf("coucou2 \n");
         fichier = fopen(nom,"w");
         *courAgenda = (*pag);
-        printf("yo!\n");
         while((*courAgenda) != NULL)
         {
-            printf("test1\n");
             *courAction = *((*courAgenda)->actions);
             while(*courAction != NULL)
             {
-                printf("test2\n");
                 fputs((*courAgenda)->date,fichier);
                 fputs((*courAction)->moment,fichier);
                 fputs((*courAction)->nom,fichier);
@@ -71,14 +66,17 @@ int supprime(char date[6],char moment[3], agenda_t ** pag) /*Ne fonctionne pas*/
     agenda_t * cour = (* pag);
     while ((cour != NULL) && (strcmp(cour->date,date)<0))
     {
-        printf("coucou1 \n");
         cour = cour->suivant;
     }
-    if (!strcmp(cour->date,date))
+    if (cour != NULL)
     {
-        printf("coucou2 \n");
         code = supprimer_action(moment, cour->actions);
+        if ((*cour->actions) == NULL)
+        {
+            code = supprimer_agenda(date,pag);
+        }
     }
+
     return code;
 }
 
