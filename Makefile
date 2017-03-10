@@ -16,4 +16,4 @@ clean:
 	rm -rf *.o
 
 mrproper: clean
-rm -rf tp1
+	rm -rf tp1
