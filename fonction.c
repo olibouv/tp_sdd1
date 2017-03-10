@@ -164,7 +164,7 @@ int supprime(char date[6],char moment[3], agenda_t ** pag)
     {
         cour = cour->suivant;                               /* on avance le pointeur */
     }
-    if (cour != NULL)                                       /* si on n'est pas à la fin */
+    if (cour != NULL && !strcmp(cour->date,date))           /* si on a trouvé la date*/
     {
         code = supprimer_action(moment, cour->actions);     /* on supprime l'action */
         if ((*cour->actions) == NULL)                       /* si on vient de supprimer la dernière action de la semaine */
