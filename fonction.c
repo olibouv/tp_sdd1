@@ -1,3 +1,19 @@
+/*
+ ______________________________________________________________________________________
+|                                                                                      |
+|                              ___________________                                     |
+|                             |                   |                                    |
+|                             |    fonctions.c    |                                    |
+|                             |___________________|                                    |
+|                                                                                      |
+|______________________________________________________________________________________|
+	Ce fichier contient les fonctions de création, de sauvegarde, de suppression de
+	l'agenda et la fonction qui met dans une liste contiguë les occurences d'une même
+	action.
+*/
+
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "structures.h"
@@ -7,7 +23,6 @@
 
 agenda_t ** creation(char nomfichier[])/*ne fonctionne pas*/
 {
-    int cd;
     char date[6];
     char moment[3];
     char nom[10];
@@ -36,83 +51,154 @@ agenda_t ** creation(char nomfichier[])/*ne fonctionne pas*/
     return pag;
 }
 
-void sauvegarde (char nom[], agenda_t ** pag)/* fonctionne*/
+
+/*
+ _______________________________________________________________________________________
+|							sauvegarde
+|
+|   Cette fonction sauvegarde l'agenda dans un fichier texte
+|
+|	entrées : 	- nom : nom du fichier de sauvegarde
+|               - pag : adresse du pointeur d'agenda
+|
+|	sortie :	x
+|
+|			
+*/
+
+void sauvegarde (char nom[], agenda_t ** pag)
 {
-    FILE * fichier;
-    agenda_t ** courAgenda =(agenda_t **) malloc(sizeof(agenda_t *));
-    action_t ** courAction = (action_t **) malloc(sizeof(action_t *));
-    if ((*pag) != NULL )
+    FILE * fichier;                                                     /* initialisation du pointeur de fichier */
+    agenda_t ** courAgenda =(agenda_t **) malloc(sizeof(agenda_t *));   /* allocation du pointeur courant des semaines */
+    action_t ** courAction = (action_t **) malloc(sizeof(action_t *));  /* allocation du pointeur courant des actions */
+    
+    if ((*pag) != NULL )                                                /* si l'agenda n'est pas vide */
     {
-        printf("coucou2 \n");
-        fichier = fopen(nom,"w");
-        *courAgenda = (*pag);
-        printf("yo!\n");
-        while((*courAgenda) != NULL)
+        fichier = fopen(nom,"w");                                       /* on ouvre (et créé) le fichier en écriture */
+        *courAgenda = (*pag);                                           /* on initialise le pointeur courant */
+        while((*courAgenda) != NULL)                                    /* tant qu'on n'est pas à la fin de l'agenda */
         {
-            printf("test1\n");
             *courAction = *((*courAgenda)->actions);
-            while(*courAction != NULL)
+            while(*courAction != NULL)                                  /* tant qu'on n'est pas à la fin des actions */
             {
-                printf("test2\n");
-                fputs((*courAgenda)->date,fichier);
-                fputs((*courAction)->moment,fichier);
-                fputs((*courAction)->nom,fichier);
-                fputs("\n",fichier);
-                *courAction = (*courAction)->suivant;
+                fputs((*courAgenda)->date,fichier);                     /* on écrit la date de l'action */
+                fputs((*courAction)->moment,fichier);                   /* puis le moment */
+                fputs((*courAction)->nom,fichier);                      /* et enfin le nom */
+                fputs("\n",fichier);                                    /* \n pour le retour à la ligne */
+                *courAction = (*courAction)->suivant;                   /* on avance le pointeur courant des actions */
             }
-            *courAgenda = (*courAgenda)->suivant;
+            *courAgenda = (*courAgenda)->suivant;                       /* on avance le pointeur courant des semaines */
         }
     }
 }
 
-int supprime(char date[6],char moment[3], agenda_t ** pag) /*Ne fonctionne pas*/
+
+/*
+ _______________________________________________________________________________________
+|							supprime
+|
+|   Cette fonction supprime une action de l'agenda à l'aide sa date et moment
+|
+|	entrées : 	- date : date de l'action à supprimer
+|				- moment : moment de l'action à supprimer
+|               - pag : adresse du pointeur d'agenda
+|
+|	sortie :	- code : entier, code d'erreur issu des 2 fonctions supprimer_action et
+|                       supprimer_agenda
+|							1 si l'action a été supprimée
+|							0 sinon
+|
+|
+*/
+
+int supprime(char date[6],char moment[3], agenda_t ** pag)
 {
-    int code = 0;
-    agenda_t * cour = (* pag);
-    while ((cour != NULL) && (strcmp(cour->date,date)<0))
+    int code = 0;                                           /* initialisation du code d'erreur */
+    agenda_t * cour = (* pag);                              /* initialisation du pointeur courant */
+    
+    while ((cour != NULL) && (strcmp(cour->date,date)<0))   /* tant qu'on n'est pas à la fin et que la date est inférieure */
     {
-        printf("coucou1 \n");
-        cour = cour->suivant;
+        cour = cour->suivant;                               /* on avance le pointeur */
     }
-    if (cour != NULL)
-	{
-		if (!strcmp(cour->date,date))
-    	{
-        	printf("coucou2 \n");
-        	code = supprimer_action(moment, cour.actions);
-    	}
-	}
-	
-    return code;
+    if (cour != NULL)                                       /* si on n'est pas à la fin */
+    {
+        code = supprimer_action(moment, cour->actions);     /* on supprime l'action */
+        if ((*cour->actions) == NULL)                       /* si on vient de supprimer la dernière action de la semaine */
+        {
+            code = supprimer_agenda(date,pag);              /* on supprime aussi la semaine */
+        }
+    }
+
+    return code;                                            /* on renvoie le code d'erreur */
 }
 
-int trouvemotif(char motif[], char nom[10]) /*fonctionne*/
+
+/*
+ _______________________________________________________________________________________
+|							trouve_motif
+|
+|   Cette fonction retourne un booléen qui indique si le motif est dans le nom de l'action.
+|
+|	entrées : 	- motif : motif recherché
+|				- nom : nom de l'action dans laquelle on recherche le motif
+|
+|	sortie :	- bool : entier, booléen 
+|							1 si le motif est dans le nom
+|							0 sinon
+|
+|
+*/
+
+int trouve_motif(char motif[], char nom[10])
 {
     int i,j;
-    int bool =0;
+    int bool = 0;
     int n = strlen(motif);
-    if (n <= 10)
+    
+    if (n <= 10)                    /* le motif ne doit pas être plus grand que 10 */
     {
-        i = 0;
-        j = 0;
-       while(i<10 && j<n)
-       {
-           if(motif[j]==nom[i])
+        i = 0;                      /* parcourt le nom */
+        j = 0;                      /* compte le nombre de caractères successifs égaux */
+        while(i<10 && j<n)          /* tant que l'on est pas à la fin et que l'on n'a pas trouvé le motif */
+        {
+           if(motif[j]==nom[i])     /* tant que les caractères sont égaux, on incrémente */
            {
                j ++;
            }
+           else                     /* le motif n'est pas présent / pas complet */
+           {
+                j = 0;
+           }
            i++;
-       }
-        if(j == n)
-        {
-            bool =1;
         }
+        if(j == n)                  /* le motif a été trouvé */
+        {
+            bool = 1;
+        }
+        
 
     }
     return bool;
 }
 
-char *** liste_action(char motif[], agenda_t ** pag) /* fonctionne*/
+
+/*
+ _______________________________________________________________________________________
+|							liste_action
+|
+|   Cette fonction
+|
+|	entrées : 	- motif : motif recherché
+|				- pag : adresse du pointeur d'agenda
+|
+|	sortie :	- tete : adresse? pointeur? de la tete
+|							1 si le motif est dans le nom
+|							0 sinon
+|
+|
+*/
+
+char *** liste_action(char motif[], agenda_t ** pag)
 {
     char jour[9];
     int i;
@@ -127,7 +213,7 @@ char *** liste_action(char motif[], agenda_t ** pag) /* fonctionne*/
     while(courAgenda != NULL)
     {
         courAction = *(courAgenda ->actions);
-        while(courAction != NULL && !trouvemotif(motif,courAction->nom))
+        while(courAction != NULL && !trouve_motif(motif,courAction->nom))
         {
             courAction = courAction->suivant;
         }
