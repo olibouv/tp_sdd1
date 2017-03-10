@@ -235,42 +235,40 @@ int trouve_motif(char motif[], char nom[10])
 |	entrées : 	- motif : motif recherché
 |			- pag : adresse du pointeur d'agenda
 |
-|	sortie :	- tete : adresse? pointeur? de la tete
-|						1 si le motif est dans le nom
-|						0 sinon
+|	sortie :	- tête fictive contenant les pointeurs de tête et de fin de la liste contigue 
 |
 |
 */
 
 char *** liste_action(char motif[], agenda_t ** pag)
 {
-    char jour[9];
+    char jour[9]; 							/*chaine de caractère qui contient le jour de l'action*/
     int i;
-    char * courListe;
-    char *** tete = (char ***)malloc(2 * sizeof(char **));
-    char ** deb = (char **) malloc(TMAX * sizeof(char[10]));
-    char ** fin = deb;
-    *deb = (char *) malloc(sizeof(char[10]));
+    char * courListe;							  /*pointeur courant de la liste contigue*/
+    char *** tete = (char ***)malloc(2 * sizeof(char **)); 		  /*creation de la tête fictive qui contiendra les pointeurs deb et fin*/
+    char ** deb = (char **) malloc(TMAX * sizeof(char[10])); 		  /*pointeur de tête de la liste contigue*/
+    char ** fin = deb;							  /*pointeur de fin de la liste contigue, au début la liste est vide donc deb = fin*/
+    *deb = (char *) malloc(sizeof(char[10])); 				  /*creation de la première case de la liste contigue*/
     courListe = *deb;
-    action_t * courAction;
-    agenda_t * courAgenda = (*pag);
-    while(courAgenda != NULL)
+    action_t * courAction;						  /* pointeur courant des actions*/
+    agenda_t * courAgenda = (*pag);					  /*pointeur courant de l'agenda*/
+    while(courAgenda != NULL)						  /*tant qu'on n'a pas parcouru tout l'agenda */
     {
         courAction = *(courAgenda ->actions);
-        while(courAction != NULL && !trouve_motif(motif,courAction->nom))
+        while(courAction != NULL && !trouve_motif(motif,courAction->nom)) /*tant qu'on a pas parcouru toutes les actions et qu'on n'a pas trouvé le motif*/
         {
-            courAction = courAction->suivant;
+            courAction = courAction->suivant; 				  /* on passe à l'action suivante*/
         }
-        if (courAction != NULL)
+        if (courAction != NULL)						  /* Si on a trouvé le motif*/
         {
 
-            strncpy(jour,courAgenda->date,6);
-            strncpy(jour +6 ,courAction->moment,3);
-            strcpy(courListe,jour);
-            courListe += sizeof(char[10]);
-            fin = &courListe;
+            strncpy(jour,courAgenda->date,6); 				  /*on copie la date du jour*/
+            strncpy(jour +6 ,courAction->moment,3);			  /*on copie le moment de la journée*/
+            strcpy(courListe,jour); 					  /*on insère le jour dans la liste contigue*/
+            courListe += sizeof(char[10]);				  /*on avance d'une case*/
+            fin = &courListe;						  /*on décale le pointeur de fin d'une case*/ 
         }
-        courAgenda = courAgenda->suivant;
+        courAgenda = courAgenda->suivant; 				  /*on passe à la date suivante*/
     }
     tete[0] = deb;
     tete[1] = fin;
