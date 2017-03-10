@@ -126,30 +126,6 @@ int inserer_action(action_t * ac, action_t ** pac)
 
 /*
  _______________________________________________________________________________________
-|							inserer
-|
-|	entrées : 	- date (année + semaine): date de l'action à insérer
-|				- moment (jour + heure) : moment de l'action à insérer
-|				- nom : nom de l'action à insérer
-|				- pag : adresse du pointeur d'agenda dans lequel insérer
-|
-|	sortie :	- inserer_agenda
-*/
-
-int inserer(char date[6],char moment[3], char nom[10], agenda_t ** pag)
-{
-    agenda_t * ag = (agenda_t *) malloc(sizeof(agenda_t));
-    action_t * ac = (action_t *) malloc(sizeof(action_t));
-    strcpy(ag->date, date);
-    strcpy(ac->moment, moment);
-    strcpy(ac->nom, nom);
-    ag->actions = &ac;
-    return (inserer_agenda(ag,pag));
-}
-
-
-/*
- _______________________________________________________________________________________
 |							supprimer_agenda
 |
 |	entrées : 	- date (année + semaine): date de la semaine à supprimer
