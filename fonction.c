@@ -65,7 +65,7 @@ int inserer(char date[6],char moment[3], char nom[10], agenda_t ** pag)
 |
 */
 
-agenda_t ** creation(char nomfichier[])/*ne fonctionne pas*/
+agenda_t ** creation(char nomfichier[])
 {
     char date[6];
     char moment[3];
@@ -73,25 +73,18 @@ agenda_t ** creation(char nomfichier[])/*ne fonctionne pas*/
     FILE * fichier = NULL;
     agenda_t * tete = NULL;
     agenda_t ** pag = &tete;
-    fichier = fopen(nomfichier, "r");
+    fichier = fopen(nomfichier, "r");		/*ouverture du fichier en lecture*/
     if (fichier != NULL)
     {
-        /*pag = (agenda_t **) malloc(sizeof(agenda_t *));
-        tete = (agenda_t *) malloc(sizeof(agenda_t));*/
-        while (!feof(fichier))
+        while (!feof(fichier))			/* tant qu'on n' a pas atteint la fin du fichier*/
         {
             fgets(date,7,fichier);
             fgets(moment,4,fichier);
             fgets(nom,12,fichier);
-            printf("%s %s %s \n",date,moment,nom);
-            inserer(date,moment,nom,pag);
-            printf("%s %s %s \n",(*pag)->date,(*(*pag)->actions)->moment,(*(*pag)->actions)->nom);
+            inserer(date,moment,nom,pag);	/*on insère l'action*/
         }
-        printf("%s %s %s \n",(*pag)->date,(*(*pag)->actions)->moment,(*(*pag)->actions)->nom);
     }
-    printf("%s %s %s \n",(*pag)->date,(*(*pag)->actions)->moment,(*(*pag)->actions)->nom);
-    fclose(fichier);
-    printf("%s %s %s \n",(*pag)->date,(*(*pag)->actions)->moment,(*(*pag)->actions)->nom);/*Bug après fermeture du fichier WTF!!!!!*/
+    fclose(fichier);				/*on ferme le fichier*/
     return pag;
 }
 
